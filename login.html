@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logbook Login</title>
+
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            min-height: 100vh; /* Ensure body takes full height of the viewport */
+            padding: 0;
+            box-sizing: border-box;
+            position: relative;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 768px;
+            margin-top: 30px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .main-banner {
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .login-section {
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            width: 100%;
+            justify-content: flex-start;
+        }
+        
+        .logo-image {
+            width: 50px;
+            height: auto;
+            margin-right: 10px;
+        }
+        
+        .header-content h3 {
+            font-size: 24px;
+            color: #0044cc;
+            margin: 0;
+            text-align: center;
+            flex-grow: 1;
+        }
+        
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        
+        fieldset {
+            border: none;
+            margin: 0;
+            padding: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        legend {
+            font-size: 22px;
+            color: #0044cc;
+            margin-bottom: 20px;
+        }
+        
+        label {
+            font-size: 18px;
+            color: #333;
+            margin-top: 10px;
+            width: 100%;
+            text-align: left;
+            box-sizing: border-box;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 18px;
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            width: 100%;
+            justify-content: flex-start;
+            box-sizing: border-box;
+        }
+        
+        input[type="checkbox"] {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+        }
+        
+        button {
+            background-color: #0044cc;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 25px;
+        }
+        
+        button:hover {
+            background-color: #0033aa;
+        }
+        
+        .report-link {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        
+        .report-link a {
+            color: #0073e6;
+            text-decoration: none;
+        }
+        
+        .report-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .footer {
+            text-align: center;
+            background-color: #fff;
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            box-shadow: 0 -1px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .footer p {
+            margin: 0;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .header-content h3 {
+                text-align: center;
+            }
+
+            .logo-image {
+                width: 50px;
+                margin-right: 0;
+            }
+
+            .login-section {
+                padding: 20px;
+            }
+
+            button {
+                font-size: 16px;
+                padding: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-content {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .logo-image {
+                width: 50px;
+                margin-right: 0;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            label, legend {
+                font-size: 18px;
+            }
+
+            button {
+                font-size: 16px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="main-content">
+        <section class="main-banner">
+            <div class="header-content">
+                <img src="https://drive.google.com/thumbnail?&id=1ndrlegP4K0XxzWfEtR68tM4Zh8SV9Bt1" alt="Logo" class="logo-image">
+                <h3>Logbook</h3>
+            </div>
+
+            <form id="loginForm" class="login-form">
+                <fieldset>
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember" name="remember">
+                        <label for="remember">Remember Me</label>
+                    </div>
+                    <button type="submit">Gain Access</button>
+                </fieldset>
+            </form>
+            <p class="report-link">
+                <a href="#">Report your logs</a>
+            </p>
+        </section>
+    </main>
+    <footer class="footer">
+        <p>&copy; 2024 Logbook Inc. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+
+            Swal.fire({
+                title: 'Logging in...',
+                text: 'Please wait',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            // Simulate a delay (e.g., loading time)
+            setTimeout(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Login Successful',
+                    text: 'Redirecting to the main page...',
+                    showConfirmButton: false,
+                    timer: 2000,
+                }).then(() => {
+                    // Redirect to the main page
+                    window.location.href = 'home.html';
+                });
+            }, 2000); // 2 seconds delay
+        }
+
+        document.querySelector('.login-form').addEventListener('submit', handleLogin);
+    </script>
+</body>
+</html>

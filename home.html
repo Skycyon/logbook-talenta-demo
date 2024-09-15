@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base target="_top">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logbook Main Menu</title>
+   
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            min-height: 100vh;
+            padding: 0;
+            box-sizing: border-box;
+        }
+    
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+    
+        .main-banner {
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+    
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+    
+        .logo-image {
+            width: 50px;
+            height: auto;
+        }
+    
+        h3 {
+            font-size: 28px;
+            color: #0044cc;
+            margin: 0;
+            text-align: right;
+            flex-grow: 1;
+        }
+    
+        .report-selection h2 {
+            font-size: 18px;
+            color: #0044cc;
+            margin-top: 0;
+            text-align: center; /* Center the h2 */
+        }
+    
+        .report-selection p {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center; /* Center the paragraph */
+        }
+    
+        .report-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Responsive grid with auto-fit */
+            gap: 25px; /* Space between the grid items */
+            justify-items: center; /* Center items horizontally within their cells */
+            margin: 0 auto; /* Center the grid within the container */
+        }
+    
+        .report-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #ffffff;
+            background-color: #35567e;
+            border-radius: 10px;
+            padding: 10px;
+            width: 90%;
+            height: 120px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            max-width: 120px; /* Ensure max width is consistent */
+        }
+    
+        .report-option:hover {
+            transform: scale(1.05);
+        }
+    
+        .report-image {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+    
+        .footer {
+            text-align: center;
+            background-color: #fff;
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            box-shadow: 0 -1px 10px rgba(0, 0, 0, 0.1);
+        }
+    
+        .footer a {
+            color: #0073e6;
+            text-decoration: none;
+        }
+    
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+
+        @media (max-width: 768px) {
+            .main-banner {
+                padding: 15px;
+            }
+            .header-content h3 {
+                font-size: 24px;
+            }
+            .report-selection h2 {
+                font-size: 16px;
+                text-align: center; /* Ensure centering on mobile */
+            }
+            .report-selection p {
+                font-size: 12px;
+                text-align: center; /* Ensure centering on mobile */
+            }
+        }
+    </style>
+    
+</head>
+<body>
+    <main class="main-content">
+        <section class="main-banner">
+            <div class="header-content">
+                <img src="https://drive.google.com/thumbnail?&id=1ndrlegP4K0XxzWfEtR68tM4Zh8SV9Bt1" alt="Logo" class="logo-image">
+                <h3>Logbook</h3>
+            </div>
+            <section class="report-selection">
+                <h2>Choose the type of your report</h2>
+                <p>Choose one of the types below. You can submit another report after you have submitted the current one.</p>
+                <div class="report-options">
+                    <a href="dailylogguru.html" id="dailyLogLink1" class="report-option">
+                        <img id="dailyLogImage1" src="https://drive.google.com/thumbnail?&id=1CcsKexgyLj5ic22V-cetvyTbM5tgclbG" alt="Endpoint 1" class="report-image">
+                    </a>
+                    <a href="cases.html" id="dailyLogLink2" class="report-option">
+                        <img id="dailyLogImage2" src="https://drive.google.com/thumbnail?&id=1Levz0ojbo1dISrJrd1NZrXN66EfwRR0S" alt="Endpoint 2" class="report-image">
+                    </a>
+                    <a href="attendance.html" id="dailyLogLink3" class="report-option">
+                        <img id="dailyLogImage3" src="https://drive.google.com/thumbnail?&id=1lSmQwU89QU6o4yZtBM6aqx7qy7IcQxF5" alt="Endpoint 3" class="report-image">
+                    </a>
+                    <a href="stimulation.html" id="dailyLogLink4" class="report-option">
+                        <img id="dailyLogImage4" src="https://drive.google.com/thumbnail?&id=1Idu4gLxiFKvMVR2m5Zkw2DF2ROG5xZRP" alt="Endpoint 4" class="report-image">
+                    </a>
+                </div>
+            </section>
+        </section>
+    </main>
+    <footer class="footer">
+        <a href="https://drive.google.com/file/d/1IXuMGPDQLaPFyIirJNqGA6V5hLerMJfl/view?usp=sharing" target="_blank">Klik di sini untuk Baca Peraturan dan Tata Tertib</a>
+    </footer>
+
+    <script>
+        
+    </script>
+    
+</body>
+</html>

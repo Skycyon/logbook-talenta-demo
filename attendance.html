@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance - Logbook</title>
+    
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            height: 100vh;
+        }
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .main-banner {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .header-content h3 {
+            font-size: 24px;
+            color: #0044cc;
+            margin: 0;
+        }
+
+        
+        .logo-image {
+            width: 50px;
+            height: auto;
+        }
+        .log-form fieldset {
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+        .log-form label {
+            font-size: 14px;
+            color: #0044cc;
+            margin-top: 10px;
+        }
+        .log-form input, .log-form select, .log-form textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        .log-form .duration-container {
+            display: flex;
+            gap: 10px;
+        }
+        .log-form .duration-container input {
+            flex: 1;
+        }
+        .log-form button {
+            background-color: #0044cc;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .log-form button:hover {
+            background-color: #0033aa;
+        }
+
+        .log-form .select2-container--default .select2-selection--single {
+            height: 38px; /* Match the height of other input fields */
+            padding: 4px 8px;
+            font-size: 14px; /* Match the font size */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <main class="main-content">
+        <section class="main-banner">
+            <div class="header-content">
+                <img src="https://drive.google.com/thumbnail?&id=1ndrlegP4K0XxzWfEtR68tM4Zh8SV9Bt1" alt="Logo" class="logo-image">
+                <h3>Attendance</h3>
+                <i class="bi bi-list"></i>
+            </div>
+            <form class="log-form">
+                <fieldset>
+                    <label for="date">Date</label>
+                    <input type="date" id="date" name="date">
+
+                    <label for="attendance">Attendance</label>
+                    <select id="attendance" name="attendance" class="select2">
+                        <option value="" disabled selected>Choose One</option>
+                        <option value="Present">Present</option>
+                        <option value="Absent">Absent</option>
+                        <option value="Excused Leave">Excused Leave</option>
+                        <option value="Sick Leave">Sick Leave</option>
+                    </select>
+
+                    <label for="hour-in">Hour in</label>
+                    <input type="time" id="hour-in" name="hour-in">
+
+                    <label for="hour-out">Hour out</label>
+                    <input type="time" id="hour-out" name="hour-out">
+
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="3" placeholder="Write the reason of your absence"></textarea>
+
+                    <label for="evidence">Evidence or documentation of your attendance</label>
+                    <input type="file" id="evidence" name="evidence" accept="image/*" capture="camera">
+
+
+                    <button type="submit">Submit</button>
+                </fieldset>
+            </form>
+        </section>
+    </main>
+
+     <script>
+        $(document).ready(function() {
+            $('.select2').select2();
+
+            // Set the date input to the current date
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').value = today;
+
+            // Handle form submission
+            document.querySelector('.log-form').addEventListener('submit', handleAttendanceSubmit);
+        });
+
+         function gatherAttendanceFormData() {
+            
+
+            const date = document.getElementById('date').value;
+            const attendance = document.getElementById('attendance').value;
+            const hourIn = document.getElementById('hour-in').value;
+            const hourOut = document.getElementById('hour-out').value;
+            const description = document.getElementById('description').value;
+            const evidenceFile = document.getElementById('evidence').files[0];
+
+            // Check for empty fields
+            if (!date || !attendance || !hourIn || !hourOut || !description || !evidenceFile) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please fill out all fields!',
+                    timer: 2000
+                });
+                return null;
+            }
+
+            return {
+                date,
+                attendance,
+                hourIn,
+                hourOut,
+                description,
+                evidenceFile,// Keep as a file object for reading
+            };
+        }
+
+        function handleAttendanceSubmit(event) {
+            event.preventDefault(); // Prevent the form from submitting the traditional way
+
+            Swal.fire({
+                title: 'Validating Data...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+        
+            
+            const formData = gatherAttendanceFormData();
+
+            if (formData) {
+                console.log('Simulated Data Submission:', formData);
+                
+                // Simulate a delay for submission processing
+                setTimeout(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Data is submitted!',
+                        showConfirmButton: false,
+                        timer: 3000
+                    }).then(() => {
+                        // Clear the form fields after submission
+                        document.querySelector('.log-form').reset();
+                        $('.select2').val(null).trigger('change'); // Reset select2 fields
+        
+                        // Redirect to the home page
+                        window.location.href = 'home.html';
+                    });
+                }, 2000); // 2 seconds delay
+            }
+        }
+    </script>
+</body>
+</html>

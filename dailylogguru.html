@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Log Guru - Logbook</title>
+
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            min-height: 100vh;
+            padding: 0;
+            box-sizing: border-box;
+            position: relative;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 768px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        .main-banner {
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        
+        .logo-image {
+            width: 50px;
+            height: auto;
+        }
+        
+        .header-content h3 {
+            font-size: 24px;
+            color: #0044cc;
+            margin: 0;
+            text-align: center;
+            flex-grow: 1;
+        }
+        
+        .log-form fieldset {
+            border: none;
+            margin: 0;
+            padding: 0;
+            width: 100%; /* Ensure the fieldset takes full width */
+            box-sizing: border-box;
+        }
+        
+        .log-form label {
+            font-size: 14px;
+            color: #0044cc;
+            margin-top: 10px;
+            width: 100%; /* Ensure label takes full width */
+            display: block;
+        }
+        
+        .log-form input[type="text"],
+        .log-form input[type="date"],
+        .log-form select,
+        .log-form textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        
+        .log-form .duration-container {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+        
+        .log-form .duration-container input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        
+        .log-form .select2-container--default .select2-selection--single {
+            height: 38px;
+            padding: 4px 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        
+        .log-form button {
+            background-color: #0044cc;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .log-form button:hover {
+            background-color: #0033aa;
+        }
+        
+        @media (max-width: 768px) {
+            .main-banner {
+                padding: 15px;
+            }
+            
+            .log-form .duration-container {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <main class="main-content">
+        <section class="main-banner">
+            <div class="header-content">
+                <img src="https://drive.google.com/thumbnail?&id=1ndrlegP4K0XxzWfEtR68tM4Zh8SV9Bt1" alt="Logo" class="logo-image">
+                <h3>Daily Log</h3>
+                <i class="bi bi-list"></i>
+            </div>
+            <form class="log-form">
+                <fieldset>
+                    <label for="date">Date</label>
+                    <input type="date" id="date" name="date">
+    
+                    <label for="activity">Activity</label>
+                    <select id="activity" name="activity">
+                        <option value="" disabled selected>Choose an Activity</option>
+                        <option value="Pedagogic">Pedagogic</option>
+                        <option value="Professional">Professional</option>
+                        <option value="Collaboration">Collaboration</option>
+                        <option value="Others">Others (Specify in the Comment Box)</option>
+                    </select>
+
+                    <div id="sub-activity-container" style="display:none;">
+                        <label for="sub-activity">Sub-Activity</label>
+                        <select id="sub-activity" name="sub-activity">
+                            <!-- Sub-activity options will be populated here -->
+                        </select>
+                    </div>
+
+                    <div id="comment-box-container" style="display:none;">
+                        <label for="comment-box">Comment</label>
+                        <textarea id="comment-box" name="comment-box" rows="3" placeholder="Specify your activity here"></textarea>
+                    </div>
+                    
+                     <!-- File upload field -->
+                     <label for="evidenceFile">Upload Evidence (Photo)</label>
+                     <input type="file" id="evidenceFile" name="evidenceFile" accept="image/*">
+                     
+                    <label for="pillar">Pillar</label>
+                    <select id="pillar" name="pillar" class="select2">
+                        <option value="" disabled selected>Choose pillar</option>
+                        <option value="Akhlakul Karimah">Akhlakul Karimah</option>
+                        <option value="Scientific Logic Expression">Scientific Logic Expression</option>
+                        <option value="Leadership">Leadership</option>
+                        <option value="Entrepreneurship">Entrepreneurship</option>
+                    </select>           
+     
+    
+                    <label for="duration-hours">Duration</label>
+                    <div class="duration-container">
+                        <input type="number" id="duration-hours" name="duration-hours" placeholder="Hours" min="0">
+                        <input type="number" id="duration-minutes" name="duration-minutes" placeholder="Minutes" min="0" max="59">
+                    </div>
+    
+                    <label for="reflection">Teacher’s Reflection</label>
+                    <textarea id="reflection" name="reflection" rows="3" placeholder="Write here"></textarea>
+    
+                    <label for="note">Teacher’s Note</label>
+                    <textarea id="note" name="note" rows="3" placeholder="Write here"></textarea>
+    
+                    <button type="submit">Submit</button>
+                </fieldset>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        document.getElementById('activity').addEventListener('change', function() {
+            const activityValue = this.value;
+            const subActivityContainer = document.getElementById('sub-activity-container');
+            const commentBoxContainer = document.getElementById('comment-box-container');
+            const subActivitySelect = document.getElementById('sub-activity');
+            
+            subActivitySelect.innerHTML = ''; // Clear previous options
+            subActivityContainer.style.display = 'none';
+            commentBoxContainer.style.display = 'none';
+        
+            if (activityValue === 'Pedagogic') {
+                const pedagogicOptions = [
+                    'Mengajar', 'Merancang IEP', 'Asesmen peserta didik',
+                    'Mengembangkan materi ajar', 'Menerapkan teknologi assistive', 'Evaluasi IEP'
+                ];
+                populateSubActivityOptions(pedagogicOptions);
+                subActivityContainer.style.display = 'block';
+            } else if (activityValue === 'Professional') {
+                const professionalOptions = [
+                    'Melakukan manajemen kelas', 'Rapat perkembangan siswa', 'Merancang jadwal piket',
+                    'Memonitor jadwal piket', 'Menjaga dan mengontrol perlengkapan alat pribadi siswa',
+                    'Mengikuti pelatihan', 'Mengikuti pemeriksaan SOP Compliance'
+                ];
+                populateSubActivityOptions(professionalOptions);
+                subActivityContainer.style.display = 'block';
+            } else if (activityValue === 'Collaboration') {
+                const collaborationOptions = [
+                    'Melakukan kolaborasi dengan orangtua dan tim pendukung',
+                    'Melaporkan hasil perkembangan siswa dan permasalahan atau kendala kepada kepala sekolah saat rapat manajemen',
+                    'Melakukan rapat dan koordinasi dengan pihak terkait (berikan keterangan pihak pada kolom komentar)'
+                ];
+                populateSubActivityOptions(collaborationOptions);
+                subActivityContainer.style.display = 'block';
+            } else if (activityValue === 'Others') {
+                commentBoxContainer.style.display = 'block';
+            }
+        });
+        
+        function populateSubActivityOptions(options) {
+            const subActivitySelect = document.getElementById('sub-activity');
+            options.forEach(function(option) {
+                const newOption = document.createElement('option');
+                newOption.value = option;
+                newOption.text = option;
+                subActivitySelect.appendChild(newOption);
+            });
+        }
+
+        
+        $(document).ready(function() {
+            $('.select2').select2();
+
+            // Set the date input to the current date
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').value = today;
+            
+        });
+
+
+
+        function gatherFormData() {
+        
+            const date = document.getElementById('date').value;
+            const division = 'N/A'; // Use 'N/A' if users is null
+            const activity = document.getElementById('activity').value;
+            const subactivity = document.getElementById('activity').value === 'Others' 
+                ? document.getElementById('comment-box').value 
+                : document.getElementById('sub-activity').value || '';
+            const pillar = document.getElementById('pillar').value;
+            const duration = `${document.getElementById('duration-hours').value}h ${document.getElementById('duration-minutes').value}m`;
+            const reflection = document.getElementById('reflection').value;
+            const note = document.getElementById('note').value;
+            const user = 'N/A'; // Use 'N/A' if users is null
+            const imageFile = document.getElementById('evidenceFile').files[0];
+            
+            // Combined validation check
+            if (!date || !activity || !pillar || pillar === 'Choose pillar' || !duration || !reflection || !note || !imageFile) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please fill all the required fields!',
+                    timer: 1500
+                });
+                return null;
+            }
+            
+            // For the static version, just return a dummy FormData object
+            const formData = {
+                date: date,
+                division: division,
+                activity: activity,
+                subactivity: subactivity,
+                pillar: pillar,
+                duration: duration,
+                reflection: reflection,
+                note: note,
+                user: user,
+                image: imageFile ? imageFile.name : 'No file'
+            };
+        
+            console.log('Form Data:', formData);
+        
+            return formData;
+        }
+        
+        function handleDailySubmit(event) {
+            event.preventDefault(); // Prevent the form from submitting the traditional way
+            
+
+            
+
+            Swal.fire({
+                title: 'Validating Data...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+        
+            
+            const formData = gatherFormData();
+
+            if (formData) {
+                console.log('Simulated Data Submission:', formData);
+                
+                // Simulate a delay for submission processing
+                setTimeout(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Data is submitted!',
+                        showConfirmButton: false,
+                        timer: 3000
+                    }).then(() => {
+                        // Clear the form fields after submission
+                        document.querySelector('.log-form').reset();
+                        $('.select2').val(null).trigger('change'); // Reset select2 fields
+        
+                        // Redirect to the home page
+                        window.location.href = 'home.html';
+                    });
+                }, 2000); // 2 seconds delay
+            }
+        }
+        
+        document.querySelector('.log-form').addEventListener('submit', handleDailySubmit);
+        
+    </script>
+</body>
+</html>

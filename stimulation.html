@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stimulation - Logbook</title>
+    
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            height: 100vh;
+        }
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .main-banner {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .header-content h3 {
+            font-size: 24px;
+            color: #0044cc;
+            margin: 0;
+        }
+        
+        .logo-image {
+            width: 50px;
+            height: auto;
+        }
+        .log-form fieldset {
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+        .log-form label {
+            font-size: 14px;
+            color: #0044cc;
+            margin-top: 10px;
+        }
+        .log-form input, .log-form select, .log-form textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        .log-form .duration-container {
+            display: flex;
+            gap: 10px;
+        }
+        .log-form .duration-container input {
+            flex: 1;
+        }
+        .log-form button {
+            background-color: #0044cc;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .log-form button:hover {
+            background-color: #0033aa;
+        }
+
+        .log-form .select2-container--default .select2-selection--single {
+            height: 38px; /* Match the height of other input fields */
+            padding: 4px 8px;
+            font-size: 14px; /* Match the font size */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <main class="main-content">
+        <section class="main-banner">
+            <div class="header-content">
+                <img src="https://drive.google.com/thumbnail?&id=1ndrlegP4K0XxzWfEtR68tM4Zh8SV9Bt1" alt="Logo" class="logo-image">
+                <h3>Stimulation Log</h3>
+                <i class="bi bi-list"></i>
+            </div>
+            <form class="log-form" id="stimulationForm">
+                <fieldset>
+                    <label for="date">Date</label>
+                    <input type="date" id="date" name="date">
+
+                    <label for="student-name">Student’s Name</label>
+                    <textarea id="student-name" name="student-name" rows="3" placeholder="Write here"></textarea>
+
+                    <label for="stimulation">Stimulation Type</label>
+                    <select id="stimulation" name="stimulation" class="select2">
+                        <option value="" disabled selected>Choose One</option>
+                        <option value="Sensori Integrasi">Sensori Integrasi</option>
+                        <option value="Sensori Motorik Halus">Sensori Motorik Halus</option>
+                        <option value="Stimulasi Wicara">Stimulasi Wicara</option>
+                    </select>
+
+                    <label for="sub-stimulation" id="sub-stimulation-label" style="display:none;">Sub-Stimulation</label>
+                    <select id="sub-stimulation" name="sub-stimulation" style="display:none;">
+                        <!-- Sub-stimulation options will be populated here -->
+                    </select>
+
+                    <label for="child-stimulation" id="child-stimulation-label" style="display:none;">Child Stimulation</label>
+                    <select id="child-stimulation" name="child-stimulation" style="display:none;">
+                        <!-- Child-stimulation options will be populated here -->
+                    </select>
+
+                    <label for="status">Status</label>
+                    <select id="status" name="status">
+                        <option value="" disabled selected>Choose One</option>
+                        <option value="Not Started">Not Yet Treated</option>
+                        <option value="In Progress">In Treatment</option>
+                        <option value="Done">Treated</option>
+                    </select>
+
+                    <label for="action">Treatment</label>
+                    <textarea id="action" name="action" rows="3" placeholder="Write here"></textarea>
+
+                    <label for="note">Teacher’s Note</label>
+                    <textarea id="note" name="note" rows="3" placeholder="Write here"></textarea>
+
+                    <button type="submit">Submit</button>
+                </fieldset>
+            </form>
+        </section>
+    </main>
+    
+    <script>
+      $(document).ready(function() {
+        $('.select2').select2();
+
+        // Set the date input to the current date
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('date').value = today;
+
+        const subStimulationOptions = {
+            "Sensori Integrasi": ["Proprioseptif", "Taktil", "Vestibular", "Visual", "Auditori", "Gustatori", "Olfaktori"],
+            "Sensori Motorik Halus": ["Meronce", "Menggunting", "Melipat kertas", "Menulis", "Mencocok", "Meremas-remas kertas/tissue", "Menjepit 2 jari (telunjuk dan ibu jari)", "Menjelujur sederhana", "Memasang puzzle", "Menjumput"],
+            "Stimulasi Wicara": ["Stimulasi bibir", "Stimulasi lidah", "Babbling", "Laling", "Imitasi kata (Ecolali)", "Produksi bilabial tunggal", "Massage oral motor", "Imitasi gerakan motorik mulut", "Kemampuan bahasa reseptif"]
+        };
+
+        const childStimulationOptions = {
+            "Proprioseptif": [],
+            "Taktil": [],
+            "Vestibular": [],
+            "Visual": [],
+            "Auditori": [],
+            "Gustatori": [],
+            "Olfaktori": [],
+            "Meronce": ["Meronce besar", "Meronce sedang", "Meronce kecil"],
+            "Menggunting": ["Garis lurus/vertikal", "Garis horizontal", "Garis zig-zag", "Berpola/bergambar"],
+            "Menulis": ["Shapping/titik-titik", "Garis lurus/vertikal dengan jarak 5-10 cm", "Imitasi gerakan motorik halus"],
+            "Mencocok": ["Tanpa pola", "Garis vertikal", "Garis horizontal", "Kotak, lingkaran", "Zig-zag", "Berpola/bergambar"],
+            "Memasang puzzle": ["Bertangkai", "4 keping", "4-6 keping", "Lebih dari 10 keping", "Tangrm"],
+            "Menjumput": ["Kacang tanah", "Kacang ijo", "Beras"],
+            "Stimulasi bibir": ["Buka tutup-tahan mulut", "Buka rahang lebar tahan", "Mengatup bibir atas bawah tanpa suara", "Mengatup bibir atas bawah dengan suara", "Meniup"],
+            "Stimulasi lidah": ["Lidah kebawah tahan", "Lidah keatas tahan", "Lidah kekanan tahan", "Lidah kekiri tahan", "Menjilat", "Mendesis"],
+            "Imitasi gerakan motorik mulut": ["Tersenyum", "Meringis", "Mencium"],
+            "Kemampuan bahasa reseptif": ["Mengikuti perintah sederhana", "Identifikasi anggota tubuh", "Identifikasi gambar transportasi", "Identifikasi gambar buah", "Identifikasi gambar binatang", "Identifikasi gambar lokasi", "Identifikasi gambar profesi", "Identifikasi gambar pakaian", "Identifikasi gambar alat makan", "Identifikasi gambar alat sekolah"]
+        };
+
+        $('#stimulation').change(function() {
+            const selectedStimulation = $(this).val();
+            const subOptions = subStimulationOptions[selectedStimulation] || [];
+            const $subStimulation = $('#sub-stimulation');
+            const $subStimulationLabel = $('#sub-stimulation-label');
+            $subStimulation.empty().append('<option value="" disabled selected>Choose One</option>');
+
+            if (subOptions.length > 0) {
+                subOptions.forEach(option => {
+                    $subStimulation.append(new Option(option, option));
+                });
+                $subStimulation.show();
+                $subStimulationLabel.show();
+            } else {
+                $subStimulation.hide();
+                $subStimulationLabel.hide();
+            }
+
+            $('#child-stimulation').hide();
+            $('#child-stimulation-label').hide();
+// Ensure subOptions is an array or fallback to an empty array if undefined or not an array
+const childOptions = Array.isArray(subOptions) && subOptions.length > 0 
+    ? [] 
+    : subStimulationOptions[selectedStimulation];
+
+const $childStimulation = $('#child-stimulation');
+const $childStimulationLabel = $('#child-stimulation-label');
+
+// Clear previous options and add the default "Choose One" option
+$childStimulation.empty().append('<option value="" disabled selected>Choose One</option>');
+
+// Ensure childOptions is an array and has elements before proceeding
+if (Array.isArray(childOptions) && childOptions.length > 0) {
+    childOptions.forEach(option => {
+        $childStimulation.append(new Option(option, option));
+    });
+    $childStimulation.show();
+    $childStimulationLabel.show();
+} else {
+    $childStimulation.hide();
+    $childStimulationLabel.hide();
+}
+
+        });
+
+        $('#sub-stimulation').change(function() {
+            const selectedSubStimulation = $(this).val();
+            const childOptions = childStimulationOptions[selectedSubStimulation] || [];
+            const $childStimulation = $('#child-stimulation');
+            const $childStimulationLabel = $('#child-stimulation-label');
+            $childStimulation.empty().append('<option value="" disabled selected>Choose One</option>');
+
+            if (childOptions.length > 0) {
+                childOptions.forEach(option => {
+                    $childStimulation.append(new Option(option, option));
+                });
+                $childStimulation.show();
+                $childStimulationLabel.show();
+            } else {
+                $childStimulation.hide();
+                $childStimulationLabel.hide();
+            }
+        });
+
+        // Handle form submission
+        document.querySelector('.log-form').addEventListener('submit', handleStimulationSubmit);
+    });
+
+    function gatherFormData() {
+       
+
+        const date = document.getElementById('date').value;
+        const studentName = document.getElementById('student-name').value;
+        const stimulation = document.getElementById('stimulation').value;
+        const subStimulation = document.getElementById('sub-stimulation').value;
+        const childStimulation = document.getElementById('child-stimulation').value;
+        const status = document.getElementById('status').value;
+        const action = document.getElementById('action').value;
+        const note = document.getElementById('note').value;
+
+        // Check for empty fields
+        if (!date || !studentName || !stimulation || !status || !action || !note) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please fill out all required fields!',
+                timer: 2000
+            });
+            return null;
+        }
+
+        return {
+            date,
+            studentName,
+            stimulation,
+            subStimulation,
+            childStimulation,
+            status,
+            action,
+            note,
+    
+        };
+    }
+
+    function handleStimulationSubmit(event) {
+        event.preventDefault(); // Prevent the form from submitting the traditional way
+
+        Swal.fire({
+            title: 'Validating Data...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+    
+        
+        const formData = gatherFormData();
+
+        if (formData) {
+            console.log('Simulated Data Submission:', formData);
+            
+            // Simulate a delay for submission processing
+            setTimeout(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Data is submitted!',
+                    showConfirmButton: false,
+                    timer: 3000
+                }).then(() => {
+                    // Clear the form fields after submission
+                    document.querySelector('.log-form').reset();
+                    $('.select2').val(null).trigger('change'); // Reset select2 fields
+    
+                    // Redirect to the home page
+                    window.location.href = 'home.html';
+                });
+            }, 2000); // 2 seconds delay
+        }
+    }
+
+    </script>
+</body>
+</html>
